@@ -4,12 +4,14 @@ import dotenv from 'dotenv';
 import ideaRouter from './routes/ideaRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import connectDB from './config/db.js';
+import { default as logger } from 'morgan';
 
 dotenv.config();
 
 const app = express();
-
 const PORT = process.env.PORT || 8000;
+
+app.use(logger('dev'));
 
 // Database connection
 connectDB();
@@ -31,5 +33,5 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}`);
+  console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
