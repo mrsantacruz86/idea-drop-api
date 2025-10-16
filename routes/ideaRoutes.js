@@ -5,10 +5,18 @@ import mongoose from 'mongoose';
 
 // @route             GET /api/ideas
 // @description       Get all ideas
-// @access             Public
+// @access            Public
+// query              _limit (Optional limit for the ideas returned)
 router.get('/', async (req, res, next) => {
   try {
-    const ideas = await Idea.find();
+    const limit = parseInt(req.query._limit);
+    const query = Idea.find().sort({ createdAt: -1 });
+
+    if (!isNaN(limit)) {
+      query.limit(limit);
+    }
+
+    const ideas = await query.exec();
     res.json(ideas);
   } catch (err) {
     console.error(err);
@@ -18,7 +26,7 @@ router.get('/', async (req, res, next) => {
 
 // @route             GET /api/ideas/:id
 // @description       Get single idea
-// @access             Public
+// @access            Public
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -42,7 +50,7 @@ router.get('/:id', async (req, res, next) => {
 
 // @route             POST /api/ideas
 // @description       Create new idea
-// @accesss             Private
+// @accesss           Private
 router.post('/', async (req, res, next) => {
   try {
     const { title, summary, description, tags } = req.body;
