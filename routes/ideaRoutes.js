@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import Idea from '../models/Idea.js';
+import User from '../models/User.js';
 import mongoose from 'mongoose';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -36,7 +37,8 @@ router.get('/:id', async (req, res, next) => {
       throw new Error('Idea not Found');
     }
 
-    const idea = await Idea.findById(id);
+    // Populate the `user` reference so the response contains the creator's id, name and email
+    const idea = await Idea.findById(id).populate('user', 'name email');
 
     if (!idea) {
       res.status(404);
