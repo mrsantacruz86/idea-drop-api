@@ -106,7 +106,10 @@ router.delete('/:id', protect, async (req, res, next) => {
     }
 
     // Check if user owns the idea
-    if (idea.user.toString() !== req.user._id.toString()) {
+    if (
+      (idea.user.toString() || idea.user._id.toString()) !==
+      req.user._id.toString()
+    ) {
       res.status(403);
       throw new Error('Not authorized to delete this idea');
     }
